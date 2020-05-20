@@ -1,26 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+//URL for all countries:
+const ALL_COUNTRIES_URL = 'https://restcountries.eu/rest/v2/all'
+
+//URL for flag SVG
+const FLAG_URL = country_code => `https://restcountries.eu/data/${country_code}.svg`
+
+//URL for search function
+// const COUNTRY_BY_NAME = countryName => `https://restcountries.eu/rest/v2/name/${countryName}`
+
+
+class App extends Component {
+
+  state = {
+    countries: []
+  };
+
+  componentDidMount() {
+    fetch(ALL_COUNTRIES_URL)
+      .then(res => res.json())
+      .then(countries => {
+        this.setState({ countries })
+      });
+  }
+
+  render() {
+    const { countries = [] } = this.state;
+    return (
+      <React.Fragment>
+        <header>
+          <h1>Where in the World </h1>
+          
+        </header>
+        <div>
+          {countries.map(country => (
+            <img
+              alt={country.name}
+              key={country.alpha3Code}
+              src={FLAG_URL(country.alpha3Code.toLowerCase())}
+            />
+          ))}
+        </div>
+      </React.Fragment>
+    );
+  }
 }
 
 export default App;
